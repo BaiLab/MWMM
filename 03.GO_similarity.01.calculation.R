@@ -12,14 +12,18 @@ conversion_table_path.TCGA <- file.path(getwd(), "function_scripts_directory", "
 source(file.path(getwd(), "function_scripts_directory", "GO_similarity_functions.R"))
 #-------------------------------------------------------------------------------
 
-# look up the input directory to get the cancer types.
-TCGA_correlation_coefficient_tables_path <- file.path(getwd(), "input_data_directory", "TCGA_correlation_coefficient_tables")
+if (is.na(args[1])) {
+    # look up the input directory to get the cancer types.
+    TCGA_correlation_coefficient_tables_path <- file.path(getwd(), "input_data_directory", "TCGA_correlation_coefficient_tables")
+    
+    cancer_types <- dir(TCGA_correlation_coefficient_tables_path) %>%
+        strsplit(., "\\.") %>%
+        sapply(., function(x) x[1][[1]])
+} else {
+    # use command line to run different cancer types in the backend concurrently.
+    cancer_types <- args[1]
+}
 
-cancer_types <- dir(TCGA_correlation_coefficient_tables_path) %>%
-    strsplit(., "\\.") %>%
-    sapply(., function(x) x[1][[1]])
-
-cancer_types <- args[1]
 
 # Build the GO similarity databases.
 ontology_terms <- c("BP", "CC", "MF")
@@ -42,10 +46,7 @@ for (cancer_type in cancer_types) {
     communities_rounds <- dir(path_to_input_files) %>%
         strsplit(., "\\.") %>%
         sapply(., function(x) x[2][[1]])
-    # communities_rounds <- rev(communities_rounds)
-    # command line take the algorithm name index.
-    # communities_rounds <- communities_rounds[as.numeric(args[1])]
-    
+
     input_file_names <- paste("the_communities", communities_rounds, "rds", sep = ".")
     path_to_input_files <- file.path(getwd(),
                                      "output_data_directory",
@@ -74,7 +75,6 @@ for (cancer_type in cancer_types) {
                showWarnings = F, recursive = T)
     
 
-    
     for (i in seq_along(communities_rounds)) {
         # i <- 12
         print(i)
@@ -102,17 +102,3 @@ for (cancer_type in cancer_types) {
 print("Everything is done!")
 proc.time() - ptm
 
-
-
-# -----------------------previous code, maybe useless, maybe useful -----------
-
-# conversion_table_path.miRMAP_bicluster <- file.path(getwd(), "function_scripts_directory", "mRNA_names_and_Entrez_IDs_dictionary.miRMAP_bicluster.csv")
-
-
-# if (communities_rounds[i] == "miRMAP_bicluster") {
-#     GO_similarity_df <- calculate_GO_similiarity_from_a_communities(current_communities, conversion_table_path.miRMAP_bicluster)
-# } else {
-# GO_similarity_df <- calculate_GO_similiarity_from_a_communities(current_communities, conversion_table_path.TCGA, similarity_database_list)
-# # }
-# 
-# write.csv(GO_similarity_df, file = path_to_output_files[i], row.names = F, quote = F)

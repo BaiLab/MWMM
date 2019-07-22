@@ -44,7 +44,6 @@ for (cancer_type in cancer_types) {
     names(a_list_of_GO_similarity_df) <- communities_rounds
     
     
-    
     accum_list <- vector(mode = "list", length = length(communities_rounds))
     for(i in names(a_list_of_GO_similarity_df)){
         
@@ -55,12 +54,12 @@ for (cancer_type in cancer_types) {
         
         # Calculate the the mean of each column grouped by the GO terms: BP, CC, MF
         wide_df <- aggregate(current_GO_df[, -c(1, 2)], list(current_GO_df$ontology), mean)
-        colnames(wide_df) = c("GO_term", "intracluster", "intercluster", "difference")
+        colnames(wide_df) = c("GO_term", "intra-cluster", "inter-cluster", "difference")
         
         # organize the data frame from the wide format table to the long format table.
         long_df <- gather(data = wide_df,
                           key = "score_category",
-                          value = score_value, intracluster, intercluster, difference)
+                          value = score_value, "intra-cluster", "inter-cluster", difference)
         
         sorted_long_df <- long_df[order(long_df$GO_term), ]
         rownames(sorted_long_df) <- paste(sorted_long_df$GO_term,
@@ -86,37 +85,4 @@ for (cancer_type in cancer_types) {
 }
 
 proc.time() - ptm
-
-# communities_rounds <- c("label_propagation",
-#                         "walktrap_algorithm",
-#                         "fast_greedy",
-#                         "leading_eigen",
-#                         "edge_betweenness",
-#                         "markov_matrix",
-#                         "louvain_algorithm",
-#                         "miRMAP_bicluster",
-#                         "hungarian_algorithm",
-#                         "blossom_01",
-#                         "blossom_02",
-#                         "blossom_03",
-#                         "blossom_04",
-#                         "blossom_05",
-#                         "blossom_06",
-#                         "blossom_07",
-#                         "blossom_08")
-# 
-# communities_rounds <- c("label_propagation",
-#                         "walktrap_algorithm",
-#                         "fast_greedy",
-#                         "leading_eigen",
-#                         "edge_betweenness",
-#                         "louvain_algorithm",
-#                         "hungarian_algorithm",
-#                         "blossom_01",
-#                         "blossom_02",
-#                         "blossom_03",
-#                         "blossom_04",
-#                         "blossom_05",
-#                         "blossom_06",
-#                         "blossom_07")
 

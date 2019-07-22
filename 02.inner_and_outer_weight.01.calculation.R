@@ -19,7 +19,6 @@ cancer_types <- dir(TCGA_correlation_coefficient_tables_path) %>%
 for (cancer_type in cancer_types) {
     # cancer_type <- "BRCA"
 
-    
     # get algorithm names, ie, communities_rounds.
     path_to_communities_input_directory <- file.path(getwd(),
                                                      "output_data_directory",
@@ -75,34 +74,3 @@ for (cancer_type in cancer_types) {
     cat(cancer_type, "has done!", sep = " ", "\n")
     print("*****************************************************************")
 }
-
-# cancer_type
-# i
-# communities_rounds[i]
-# 
-# 
-# previous_communities <- readRDS(path_to_communities_input_files[3])
-# current_communities <- readRDS(path_to_communities_input_files[4])
-# > i
-# [1] 4
-# Warning messages:
-#     1: In max(m) : no non-missing arguments to max; returning -Inf
-# 2: In max(m) : no non-missing arguments to max; returning -Inf
-# 3: In max(m) : no non-missing arguments to max; returning -Inf
-# 4: In max(m) : no non-missing arguments to max; returning -Inf
-# > cancer_type
-# [1] "LUSC"
-# > communities_rounds[i]
-# [1] "blossom_04"
-
-
-# new_communities <- readRDS(path_to_communities_input_files[15])
-# 
-# communities(new_communities)
-# 
-# old_communities <- readRDS("D:\\WorkingDirectories\\R\\hungarian_blossom_pipeline\\output_data_directory\\binary_object_files\\communities_files.BRCA.old\\the_communities.blossom_01.rds")
-# communities(old_communities)[[9]]
-# 
-# length(communities(old_communities)[[4]])
-# length(communities(new_communities)[[4]])
-

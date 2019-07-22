@@ -54,9 +54,10 @@ write.csv(new_all_cancer_df,
                            "all_cancer_type_GO_summary.csv"),
           row.names = F)
 
+proc.time() - ptm
 
 
-
+# -------------------garbage code--------------------------------------------
 # find the top n difference algorithms.
 # cutoff_n <- 3
 # accum_list <- list()
@@ -118,4 +119,3 @@ write.csv(new_all_cancer_df,
 
 
 
-proc.time() - ptm

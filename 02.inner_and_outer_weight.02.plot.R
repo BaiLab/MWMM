@@ -16,9 +16,12 @@ graph_output_directory <- file.path(getwd(),
                                     "inner_and_outer_weight_plots")
 dir.create(graph_output_directory, showWarnings = F, recursive = T)
 
-for (cancer_type in cancer_types) {
-    
 
+
+only_draw_MWMM <- TRUE
+# only_draw_MWMM <- FALSE
+
+for (cancer_type in cancer_types) {
     
     # get algorithm names, ie, communities_rounds.
     path_to_communities_input_directory <- file.path(getwd(),
@@ -31,7 +34,8 @@ for (cancer_type in cancer_types) {
     communities_rounds <- dir(path_to_communities_input_directory) %>%
         strsplit(., "\\.") %>%
         sapply(., function(x) x[2][[1]])
-
+    
+    
     our_communities_rounds <- c("hungarian_algorithm", communities_rounds[grepl("blossom", communities_rounds)])
     other_communities_rounds <- c("label_propagation",
                                   "edge_betweenness",
@@ -40,11 +44,14 @@ for (cancer_type in cancer_types) {
                                   "leading_eigen",
                                   "louvain_algorithm")
     
-    communities_rounds <- c(our_communities_rounds, other_communities_rounds)
-    communities_rounds <- our_communities_rounds
+    if (only_draw_MWMM == TRUE) {
+        communities_rounds <- our_communities_rounds
+    } else {
+        # draw graph of all algorithm results.
+        communities_rounds <- c(our_communities_rounds, other_communities_rounds)
+    }
     
-    
-    input_file_names <- output_file_names <- paste("inner_and_outer_weight", communities_rounds, "csv", sep = ".")
+    input_file_names <- paste("inner_and_outer_weight", communities_rounds, "csv", sep = ".")
     path_to_input_files <- file.path(getwd(),
                                      "output_data_directory",
                                      "plain_text_files",
@@ -54,8 +61,6 @@ for (cancer_type in cancer_types) {
     
     a_list_of_algorithm_condition_weights <- lapply(path_to_input_files, read.csv, check.names = FALSE)
     names(a_list_of_algorithm_condition_weights) <- communities_rounds
-    
-    
     
     data_table <- data.frame(algorithm_round = character(0),
                              cluster_number = numeric(0),
@@ -93,16 +98,12 @@ for (cancer_type in cancer_types) {
     
     
     
-    
-    
-    
-    # data_table <- read.table(header = T, text = data_text)
-    
-    path_to_output_file <- file.path(graph_output_directory,
-                                     paste("inner_and_outer_weight_conditions", cancer_type, "pdf", sep = "."))
-    path_to_output_file <- file.path(graph_output_directory,
-                                     paste("inner_and_outer_weight_conditions.MWMM_only", cancer_type, "pdf", sep = "."))
-    # path_to_output_file <- file.path(getwd(), "output_data_directory", "graph_files", "our_algorithms.cluster_number_and_conditions.BRCA.pdf")
+    if (only_draw_MWMM == TRUE) {
+        path_to_output_file <- file.path(graph_output_directory, paste("inner_and_outer_weight_conditions.MWMM_only", cancer_type, "pdf", sep = "."))
+    } else {
+        path_to_output_file <- file.path(graph_output_directory, paste("inner_and_outer_weight_conditions", cancer_type, "pdf", sep = "."))
+    }
+
     pdf(path_to_output_file)
     
     my_colors <- c("red", "green", "steelblue")
@@ -114,8 +115,6 @@ for (cancer_type in cancer_types) {
     
     plot(c(1, algorithm_number), c(1, 350), type = "n", frame.plot = F,
          xaxt="n", xlab = "", ylab = "cluster number (count)")
-    
-    
     
     axis(side = 1, at=1:algorithm_number, labels= data_table$algorithm_round, las = 2)
     lines(1:algorithm_number, data_table$cluster_number,
@@ -148,49 +147,9 @@ for (cancer_type in cancer_types) {
                       "condition 2"),
            col = my_colors, pch = my_pchs, lty = 1, lwd = 2)
     
-    
     dev.off()
-    
 
 }
 
 
-
 proc.time() - ptm
-
-
-
-
-
-
-# communities_rounds <- c("label_propagation",
-#                         "edge_betweenness",
-#                         "walktrap_algorithm",
-#                         "fast_greedy",
-#                         "leading_eigen",
-#                         "louvain_algorithm",
-#                         "hungarian_algorithm",
-#                         "blossom_01",
-#                         "blossom_02",
-#                         "blossom_03",
-#                         "blossom_04",
-#                         "blossom_05",
-#                         "blossom_06",
-#                         "blossom_07",
-#                         "blossom_08")
-
-
-
-
-# data_text <- "
-# algorithm_round	cluster_number	condition_1_Yes_percent	condition_2_Yes_percent
-# 25H	312	0.60	0.16
-# B01	173	0.65	0.22
-# B02	105	0.70	0.28
-# B03	71	0.80	0.32
-# B04	55	0.91	0.40
-# B05	47	0.98	0.49
-# B06	43	1.00	0.47
-# B07	41	1.00	0.44
-# "
-# 

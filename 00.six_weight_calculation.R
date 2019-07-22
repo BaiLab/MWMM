@@ -2,10 +2,9 @@ rm(list = ls())
 ptm <- proc.time()
 options(stringsAsFactors = F)
 library("magrittr")
-# library("HGNChelper")
 library("hash")
 
-# gene symbol correction. The dictionary table adapted from package "HGNChelper"
+# gene symbol correction. The dictionary table is adapted from package "HGNChelper"
 # build a dictionary for mogrified query date-style gene symbol.
 mo_map_df <- read.csv(file.path(getwd(), "function_scripts_directory", "mog_map.csv"), check.names = F)
 mo_map_dictionary <- hash(keys = mo_map_df$mogrified, values = mo_map_df$original)
@@ -216,56 +215,3 @@ for (cancer_type in names(a_list_of_input_df)) {
 }
 
 proc.time() - ptm
-
-
-# -------------garbage codes below--------------------------------------
-
-
-
-# only several genes are problematic and corrected.
-
-
-# # refer to https://stackoverflow.com/questions/3903157/how-can-i-check-whether-a-function-call-results-in-a-warning
-# while (TRUE) {
-#     try_catch_condition <- tryCatch(findExcelGeneSymbols(current_gene_names),
-#                                     warning = function(w) w,
-#                                     error = function(e) e,
-#                                     finally = print("Warning is catched!!!"))
-#     if(is(try_catch_condition, "warning")) {
-#         current_gene_names <- findExcelGeneSymbols(current_gene_names)
-#     } else {
-#         break
-#     }
-# }
-
-# x <- a_list_of_input_df[["BRCA"]]
-# # names(a_list_of_input_df)
-# cancer_type <- "BLCA"
-# x$microRNA
-# x$mRNA
-
-# # assemble the edgelist and write them to the hard disk.
-# write_edgelist_csv <- function(a_vector) {
-#     a_vector <- integrated_mean_value_weight
-#     current_edgelist_dataframe <- data.frame(mRNA = input_df$mRNA,
-#                                              microRNA = input_df$microRNA,
-#                                              weight = a_vector,
-#                                              edge_color = correlation_change)
-#     current_output_file_name <- paste(deparse(substitute(a_vector)), "csv", sep = ".")
-#     
-#     output_file <- file.path(getwd(), "output_data_directory", "plain_text_files",
-#                              paste("six_kinds_of_weights_files", cancer_type, sep = "."),
-#                              current_output_file_name)
-#     
-#     write.csv(current_edgelist_dataframe,
-#               file = output_file,
-#               quote = F, row.names = F)
-# }
-# 
-# write_edgelist_csv(integrated_mean_value_weight)
-# write_edgelist_csv(all_negative_value_weight)
-# write_edgelist_csv(all_positive_value_weight)
-# write_edgelist_csv(arithmetic_mean_value_weight)
-# write_edgelist_csv(geometric_mean_value_weight)
-# write_edgelist_csv(maximum_absolute_value_weight)
-

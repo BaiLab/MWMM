@@ -19,7 +19,7 @@ output_graph_directory <- file.path(getwd(), "output_data_directory", "graph_fil
 dir.create(output_graph_directory, showWarnings = F, recursive = T)
 
 for (cancer_type in cancer_types) {
-    # cancer_type <- "LUAD"
+    cancer_type <- "BRCA"
     
     # get algorithm names, ie, communities_rounds.
     path_to_communities_input_directory <- file.path(getwd(),
@@ -56,7 +56,7 @@ for (cancer_type in cancer_types) {
     
     
     for (i in names(a_list_of_enrichment_list)) {
-        # i <- "hungarian_algorithm"
+        i <- "blossom_01"
         
         an_enrichment_result_list <- a_list_of_enrichment_list[[i]]
         
@@ -64,7 +64,7 @@ for (cancer_type in cancer_types) {
         # "ck", "do", "ncg", "kk", "ego_BP", "ego_CC", "ego_MF"
         for (j in names(an_enrichment_result_list)) {
             
-            # j <- "kk"
+            j <- "kk"
             a_term_object <- an_enrichment_result_list[[j]]
             if (is.null(a_term_object)) {
                 next
@@ -83,12 +83,14 @@ for (cancer_type in cancer_types) {
                 
                 p <- dotplot(a_term_object)
                 q <- p + labs(y=y_axis_label, x = "Clusters")
-                ggsave(path_to_graph_output, q, width = 170, height = 170, units = "mm", scale = 2.5)
+                # ggsave(path_to_graph_output, q, width = 170, height = 170, units = "mm", scale = 2.5)
             }
         }
     }
-    # break
+    break
 }
+
+temp_df <- a_term_object@compareClusterResult
 
 proc.time() - ptm
 
